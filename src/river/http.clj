@@ -15,28 +15,29 @@
   "Generates a producer that performs an HTTP request and streams it's
   response body to it's consumer."
   (fn produce-http-request
-    ([method url consumer]
-      (produce-http-request method url {} consumer))
-    ([method url req consumer]
-      (let [response (client/request (merge req
-                                            {:method method
-                                             :url url
-                                             :as :stream}))]
-        (with-open [input-stream (:body response)]
-          (producer-fn input-stream consumer))))))
+    ([method url]
+      (produce-http-request method url {}))
+    ([method url req]
+      (fn producer [consumer]
+        (let [response (client/request (merge req
+                                              {:method method
+                                               :url url
+                                               :as :stream}))]
+          (with-open [input-stream (:body response)]
+            ((producer-fn input-stream) consumer)))))))
 
 (defn- gen-http-producer 
   "Generates a http-producer given a producer-fn and an HTTP method."
   [producer-fn method]
   (let [produce-http-request (gen-produce-http-request producer-fn)]
     (fn produce-http-method
-      ([url consumer]
-        (produce-http-request method url {} consumer))
-      ([url req-params consumer]
-        (produce-http-request method url req-params consumer)))))
+      ([url]
+        (produce-http-request method url {}))
+      ([url req-params]
+        (produce-http-request method url req-params)))))
 
 
-(def ^{:arglists '([url consumer] [url req-params consumer])}
+(def ^{:arglists '([url] [url req-params])}
   produce-http-get
   "Executes a GET request on the given url and streams characters
   from the response body.
@@ -46,7 +47,7 @@
   (gen-http-producer produce-reader-chars :get))
              
 
-(def ^{:arglists '([url consumer] [url req-params consumer])}
+(def ^{:arglists '([url] [url req-params])}
   produce-http-post
   "Executes a POST request on the given url and streams characters
   from the response body.
@@ -55,7 +56,7 @@
   an exception (see: http-clj.client/request)"
   (gen-http-producer produce-reader-chars :post))
 
-(def ^{:arglists '([url consumer] [url req-params consumer])}
+(def ^{:arglists '([url] [url req-params])}
   produce-http-get-bytes
   "Executes a GET request on the given url and streams bytes
   from the response body.
@@ -64,7 +65,7 @@
   an exception (see: http-clj.client/request)"
   (gen-http-producer produce-input-stream-bytes :get))
 
-(def ^{:arglists '([url consumer] [url req-params consumer])}
+(def ^{:arglists '([url] [url req-params])}
   produce-http-post-bytes
   "Executes a POST request on the given url and streams bytes
   from the response body.
