@@ -1,4 +1,4 @@
-(defproject org.van-clj/http-river "0.0.1"
+(defproject org.van-clj/http-river "0.0.2-SNAPSHOT"
   :description "Stream HTTP response bodies with river."
   :author "Roman Gonzalez"
   :dependencies [[org.clojure/clojure "1.3.0"]
