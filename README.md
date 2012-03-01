@@ -1,5 +1,13 @@
 # http-river
 
+## Install
+
+```clojure
+[org.van-clj/http-river "0.0.2"]
+```
+
+## Description
+
 This library provides river producers that performs HTTP requests
 and streams their response either as a seq of characters or a seq
 of bytes.
@@ -13,10 +21,6 @@ The functions available are:
 
 For more info about how river works, check the
 [river API](http://github.com/roman/river)
-
-## Install
-
-[org.van-clj/http-river "0.0.1"]
 
 ## License
 
