@@ -24,7 +24,7 @@
                                                :url url
                                                :as :stream}))]
           (with-open [input-stream (:body response)]
-            ((producer-fn input-stream) consumer)))))))
+            ((producer-fn input-stream :encoding "UTF-8") consumer)))))))
 
 (defn- gen-http-producer 
   "Generates a http-producer given a producer-fn and an HTTP method."
